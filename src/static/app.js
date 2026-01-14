@@ -49,7 +49,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Filter by category
     if (category) {
-      activityArr = activityArr.filter(([name]) => activityCategories[name] === category);
+      activityArr = activityArr.filter(([name]) => {
+        const activityCategory = activityCategories[name];
+        // If the activity has no known category mapping, do not filter it out
+        if (!activityCategory) {
+          return true;
+        }
+        return activityCategory === category;
+      });
     }
 
     // Filter by search
@@ -72,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
       } else if (sortBy === "availability") {
         const aSpots = a[1].max_participants - a[1].participants.length;
         const bSpots = b[1].max_participants - b[1].participants.length;
-        cmp = bSpots - aSpots;
+        cmp = aSpots - bSpots;
       }
       return sortOrder === "desc" ? -cmp : cmp;
     });
